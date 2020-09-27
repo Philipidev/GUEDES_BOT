@@ -38,16 +38,18 @@ namespace MeuBot
                 //WebSocketProvider = WS4NetProvider.Instance
             });
 
+            _client.SetActivityAsync(new BotActivity());
+
             _commands = new CommandService(new CommandServiceConfig
             {
                 // Again, log level:
-                LogLevel = LogSeverity.Info,
+                //LogLevel = LogSeverity.Info,
 
                 // There's a few more properties you can set,
                 // for example, case-insensitive commands.
                 CaseSensitiveCommands = false,
             });
-
+            
             // Subscribe the logging handler to both the client and the CommandService.
             _client.Log += Log;
             _commands.Log += Log;
@@ -126,7 +128,7 @@ namespace MeuBot
             {
                 await arg.Channel.SendMessageAsync("Pong!");
             }
-
+            
             // We don't want the bot to respond to itself or other bots.
             if (msg.Author.Id == _client.CurrentUser.Id || msg.Author.IsBot) return;
 
