@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Discord;
 using System.Diagnostics;
 using Discord.Audio;
+using System.Threading;
 
 namespace MeuBot
 {
@@ -20,40 +21,64 @@ namespace MeuBot
 		[Command("help")]
 		public Task help()
 		{
+			EmbedBuilder builder = new EmbedBuilder()
+				.WithTitle("COMANDOS DO GUEDESSS")
+				.WithDescription("[̲̅$̲̅(̲̅ιοο̲̅)̲̅$̲̅] [̲̅$̲̅(̲̅ιοο̲̅)̲̅$̲̅] [̲̅$̲̅(̲̅ιοο̲̅)̲̅$̲̅] \n-----------------------------------")
+				.WithUrl("https://discordapp.com")
+				.WithColor(new Color(0xFF0E))
+				.WithFooter(footer => {
+					footer
+						.WithText("by Paulinho (lolo) Guedes")
+						.WithIconUrl("https://cdn.discordapp.com/app-icons/532756946013650956/757144fce8ff04689923934efb68fda4.png");
+				})
+				.WithThumbnailUrl("https://cdn.discordapp.com/app-icons/532756946013650956/757144fce8ff04689923934efb68fda4.png")
+				.WithAuthor(author => {
+					author
+						.WithName("Paulinho (lolo) Guedes")
+						.WithUrl("https://muquiranas.com/wp-content/uploads/2019/03/DlZUNuGXgAAKk_g-696x391.jpg")
+						.WithIconUrl("https://cdn.discordapp.com/app-icons/532756946013650956/757144fce8ff04689923934efb68fda4.png");
+				})
+				.AddField("!help", "Lista de comandos\n\n")
+				.AddField("!fale", "!fale <texto> paulo guedes vai dizer algo\n\n")
+				.AddField("!cotacao", "!cotacao <moeda> paulo guedes vai falar a cotacão\n");
+
+			var embed = builder.Build();
+			return ReplyAsync(null, false, embed);
+
 			//DeleteMessage();
 			//string echo = "*!help*\n*!fale* _<mensagem>_\n*!cotacao* _<moeda>_ EX: !cotacao usd\n*!som*";
-			var methodsNames = typeof(InfoModule).GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Select(method => "`!" + method.Name + "`");
+			//var methodsNames = typeof(InfoModule).GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Select(method => "`!" + method.Name + "`");
 			//var asd = methodsNames.GetMethods(BindingFlags.Public);//.Select(method => '!' + method.Name);
 
-			IEnumerable<EmbedFieldBuilder> EnumEmbedFieldBuilder = methodsNames.Select(n => new EmbedFieldBuilder()
-			{
-				Name = n,
-				Value = "--------------------------------------------\n",
-				IsInline = false,
-			});
-			
-			EmbedFooterBuilder EmbedFooterBuilder = new EmbedFooterBuilder()
-			{
-				Text = "PAULOOOO GUEDESSS",
-			};
+			//IEnumerable<EmbedFieldBuilder> EnumEmbedFieldBuilder = methodsNames.Select(n => new EmbedFieldBuilder()
+			//{
+			//	Name = n,
+			//	Value = "--------------------------------------------\n",
+			//	IsInline = false,
+			//});
 
-			EmbedAuthorBuilder EmbedAuthorBuilder = new EmbedAuthorBuilder()
-			{
-				Name = "Paulo Guedes",
-			};
+			//EmbedFooterBuilder EmbedFooterBuilder = new EmbedFooterBuilder()
+			//{
+			//	Text = "PAULOOOO GUEDESSS",
+			//};
 
-			EmbedBuilder embedBuilder = new EmbedBuilder()
-			{
-				Title = "Comandos",
-				Fields = EnumEmbedFieldBuilder.ToList(),
-				Description = "Lista dos comandos",
-				Color = Color.DarkGreen,
-				Footer = EmbedFooterBuilder,
-				Author = EmbedAuthorBuilder,
-				ThumbnailUrl = "https://cdn.discordapp.com/app-icons/532756946013650956/757144fce8ff04689923934efb68fda4.png?size=256",
-			};			
-			
-			return ReplyAsync(null, false, embedBuilder.Build());
+			//EmbedAuthorBuilder EmbedAuthorBuilder = new EmbedAuthorBuilder()
+			//{
+			//	Name = "Paulo Guedes",
+			//};
+
+			//EmbedBuilder embedBuilder = new EmbedBuilder()
+			//{
+			//	Title = "Comandos",
+			//	Fields = EnumEmbedFieldBuilder.ToList(),
+			//	Description = "Lista dos comandos",
+			//	Color = Color.DarkGreen,
+			//	Footer = EmbedFooterBuilder,
+			//	Author = EmbedAuthorBuilder,
+			//	ThumbnailUrl = "https://cdn.discordapp.com/app-icons/532756946013650956/757144fce8ff04689923934efb68fda4.png?size=256",
+			//};			
+
+			//return ReplyAsync(null, false, embedBuilder.Build());
 		}
 
 		[Command("fale")]
@@ -61,7 +86,10 @@ namespace MeuBot
 		public Task fale([Remainder][Summary("The text to echo")] string echo)
         {
 			DeleteMessage();
-			return ReplyAsync(echo);
+			if (echo.ToLower().Trim().Contains("sou gay") || echo.ToLower().Trim().Contains("eu sou gay") || echo.ToLower().Trim().Contains("é gay") || echo.ToLower().Trim().Contains("e gay"))
+				return ReplyAsync("<@" + Context.User.Id + "> tu gosta de dar o cu, não é?");
+			else
+				return ReplyAsync(echo);
 		}
 		// ReplyAsync is a method on ModuleBase 
 
@@ -89,6 +117,33 @@ namespace MeuBot
 			}
 		}
 
+		//[Command("ativar")]
+		//public Task ativar()
+		//{
+		//	HttpClient httpClient = new HttpClient();
+		//	try
+		//	{
+		//		while (true) 
+		//		{
+		//			HttpResponseMessage HttpResponseMessage = httpClient.GetAsync("https://economia.awesomeapi.com.br/usd").GetAwaiter().GetResult();
+
+		//			string ResponseBody = HttpResponseMessage.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+		//			dynamic json = JsonConvert.DeserializeObject<dynamic>(ResponseBody);
+
+		//			string alta = json[0].high;
+		//			string baixa = json[0].low;
+
+		//			string echo = $"Alta: {alta}\nBaixa: {baixa}";
+		//			ReplyAsync(echo);
+		//			Task.Delay(3000);
+		//		}
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		return ReplyAsync("Moeda inválida");
+		//	}
+		//}
+
 		// The command's Run Mode MUST be set to RunMode.Async, otherwise, being connected to a voice channel will block the gateway thread.
 		[Command("som", RunMode = RunMode.Async)]
 		public async Task som()
@@ -101,6 +156,7 @@ namespace MeuBot
 			var audioClient = await channel.ConnectAsync();
 
 			string path = "C:\\Users\\phili\\Music\\bateu.mp3";
+			string pathSite = "https://www.youtube.com/watch?v=IpMLYWb1G1w";
 
 			var processo = Process.Start(new ProcessStartInfo
 			{
@@ -125,37 +181,6 @@ namespace MeuBot
 		private void DeleteMessage()
         {
 			Context.Message.DeleteAsync().GetAwaiter().GetResult();
-		}
-	}
-
-	// Create a module with the 'sample' prefix
-	[Group("sample")]
-	public class SampleModule : ModuleBase<SocketCommandContext>
-	{
-		// ~sample square 20 -> 400
-		[Command("square")]
-		[Summary("Squares a number.")]
-		public async Task SquareAsync([Summary("The number to square.")] int num)
-		{
-			// We can also access the channel from the Command Context.
-			await Context.Channel.SendMessageAsync($"{num}^2 = {Math.Pow(num, 2)}");
-		}
-
-		// ~sample userinfo --> foxbot#0282
-		// ~sample userinfo @Khionu --> Khionu#8708
-		// ~sample userinfo Khionu#8708 --> Khionu#8708
-		// ~sample userinfo Khionu --> Khionu#8708
-		// ~sample userinfo 96642168176807936 --> Khionu#8708
-		// ~sample whois 96642168176807936 --> Khionu#8708
-		[Command("userinfo")]
-		[Summary("Returns info about the current user, or the user parameter, if one passed.")]
-		[Alias("user", "whois")]
-		public async Task UserInfoAsync(
-			[Summary("The (optional) user to get info from")]
-		SocketUser user = null)
-		{
-			var userInfo = user ?? Context.Client.CurrentUser;
-			await ReplyAsync($"{userInfo.Username}#{userInfo.Discriminator}");
 		}
 	}
 }
